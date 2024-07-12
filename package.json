@@ -1,0 +1,11 @@
+{
+  "name": "sukuna",
+  "version": "1.0.0",
+  "description": "domain expansion",
+  "main": "sukuna.js",
+  "scripts": {
+    "test": "osu"
+  },
+  "author": "bradley shaffer",
+  "license": "ISC"
+}
