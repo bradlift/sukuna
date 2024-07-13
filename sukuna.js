@@ -87,5 +87,5 @@ for(let t in liftl) {
 //console.log(sellers);
 //console.log(d_counter);
 
-fs.writeFile('./results.json',JSON.stringify(sellers), err => {if (err) throw err; console.log('all done');})
-fs.writeFile('./new_additions.json',JSON.stringify(new_additions), err => {if (err) throw err; console.log('all done');})
+fs.writeFile('./updated_liftoff.json',JSON.stringify(sellers), err => {if (err) throw err; console.log('all done');});
+fs.writeFile('./new_additions_only.json',JSON.stringify(new_additions), err => {if (err) throw err; console.log('all done');});
