@@ -1,124 +1,91 @@
 const fs = require('fs');
-const applovin = require('./applovin.json');
 const liftoff = require('./liftoff.json');
-//const google = require('./google.json');
-const google = require('./old_google.json');
-const unruly = require('./unruly.json');
-const rubicon = require('./rubicon.json');
-const inmobi = require('./inmobi.json');
 
-const appl = [];
-const liftl = [];
-const googl = [];
-const unrul = [];
-const rubi = [];
-const inmob = [];
+let lifto = [];
+let liftl = [];
+let lsid = [];
+let lst = [];
+let ldm = [];
 
-for (let i in applovin["sellers"]) {
-    if(applovin["sellers"][i].name && applovin["sellers"][i].domain) {
-        appl.push(
-            {
-                "name": applovin["sellers"][i].name.toLowerCase(),
-                //.replace(/[^a-zA-Z\d:]/g,""),
-                "domain": applovin["sellers"][i].domain
-            }
-        )
- //       console.log(applovin["sellers"][i].name.toLowerCase().replace(/[^a-zA-Z\d:]/g,""))
-    }
-}
-
-for (let i in google["sellers"]) {
-    if(google["sellers"][i].name && google["sellers"][i].domain) {
-        googl.push(
-            {
-                "name": google["sellers"][i].name.toLowerCase(),
-                //.replace(/[^a-zA-Z\d:]/g,""),
-                "domain": google["sellers"][i].domain
-            }
-        )
- //       console.log(applovin["sellers"][i].name.toLowerCase().replace(/[^a-zA-Z\d:]/g,""))
-    }
-}
-
-for (let i in inmobi["sellers"]) {
-    if(inmobi["sellers"][i].name && inmobi["sellers"][i].domain) {
-        inmob.push(
-            {
-                "name": inmobi["sellers"][i].name.toLowerCase(),
-                //.replace(/[^a-zA-Z\d:]/g,""),
-                "domain": inmobi["sellers"][i].domain
-            }
-        )
- //       console.log(applovin["sellers"][i].name.toLowerCase().replace(/[^a-zA-Z\d:]/g,""))
-    }
-}
-
-for (let i in unruly["sellers"]) {
-    if(unruly["sellers"][i].name && unruly["sellers"][i].domain) {
-        unrul.push(
-            {
-                "name": unruly["sellers"][i].name.toLowerCase(),
-                //.replace(/[^a-zA-Z\d:]/g,""),
-                "domain": unruly["sellers"][i].domain
-            }
-        )
- //       console.log(applovin["sellers"][i].name.toLowerCase().replace(/[^a-zA-Z\d:]/g,""))
-    }
-}
-
-for (let i in rubicon["sellers"]) {
-    if(rubicon["sellers"][i].name && rubicon["sellers"][i].domain) {
-        rubi.push(
-            {
-                "name": rubicon["sellers"][i].name.toLowerCase(),
-                //.replace(/[^a-zA-Z\d:]/g,""),
-                "domain": rubicon["sellers"][i].domain
-            }
-        )
- //       console.log(applovin["sellers"][i].name.toLowerCase().replace(/[^a-zA-Z\d:]/g,""))
-    }
-}
-
+let new_additions = [];
 
 for (let a in liftoff["sellers"]) {
-    if(liftoff["sellers"][a].name && liftoff["sellers"][a].domain == "") {
-        liftl.push(
-            
-//                "name": liftoff["sellers"][a].name.toLowerCase().replace(/[^a-zA-Z\d:]/g,""),
-                liftoff["sellers"][a].name.toLowerCase()
-                //.replace(/[^a-zA-Z\d:]/g,""),
-            
-        )
+    //&& liftoff["sellers"][a].domain == ""
+    if(liftoff["sellers"][a].name) {
+        lifto[a] = liftoff["sellers"][a].name;
+        liftl[a] = liftoff["sellers"][a].name.toLowerCase().replace(/[^a-zA-Z\d:]/g,"");
+        lsid[a] = liftoff["sellers"][a].seller_id;
+        lst[a] = liftoff["sellers"][a].seller_type;
+        ldm[a] = liftoff["sellers"][a].domain;
  //       console.log(applovin["sellers"][i].name.toLowerCase().replace(/[^a-zA-Z\d:]/g,""))
     }
 }
+let d_counter = 0;
+for (let n=0; n<48; n++){
+    var obj = JSON.parse(fs.readFileSync(`./sellers/sellers${n}.json`, 'utf8'));
+    for (let i in obj["sellers"]) {
+        let seller = obj["sellers"][i];
+        console.log(seller);
+        if(seller.name && seller.domain && liftl.indexOf(seller.name.toLowerCase().replace(/[^a-zA-Z\d:]/g,"")) > -1 && ldm[liftl.indexOf(seller.name.toLowerCase().replace(/[^a-zA-Z\d:]/g,""))] === "") {
 
-// console.log(appl)
-
-function checkLift(elem) {
-    return liftl.includes(elem.name);
+            d_counter++;
+            new_additions.push({
+                "name": seller.name,
+                "name_after_regex":seller.name.toLowerCase().replace(/[^a-zA-Z\d:]/g,""),
+                "domain": seller.domain
+            });
+            ldm[liftl.indexOf(seller.name.toLowerCase().replace(/[^a-zA-Z\d:]/g,""))]  = seller.domain;
+            //console.log(`seller domain added! ${seller.domain}`)
+        }
+    }
 }
 
-const results = inmob.filter(checkLift)
-//const results = unrul.filter(checkLift)
-//const results = appl.map((elem) => {if(liftl.includes(elem.name)){return elem}});
-
-// console.log(results)
-
-let sort_res = {};
-
- for (let c in results) {
-    if (sort_res[results[c].name]) {
-        sort_res[results[c].name].domains.push(results[c].domain);
-    } else {
-        sort_res[results[c].name] = {name: results[c].name, domains:[results[c].domain]}
+for (let n=49; n<91; n++){
+    var obj = JSON.parse(fs.readFileSync(`./sellers/sellers${n}.json`, 'utf8'));
+    for (let i in obj["sellers"]) {
+        let seller = obj["sellers"][i];
+        if(seller.name && seller.domain && liftl.indexOf(seller.name.toLowerCase().replace(/[^a-zA-Z\d:]/g,"")) > -1 && ldm[liftl.indexOf(seller.name.toLowerCase().replace(/[^a-zA-Z\d:]/g,""))] === "") {
+            //console.log(liftl.indexOf(seller.name));
+            d_counter++;
+            new_additions.push({
+                "name": seller.name,
+                "name_after_regex":seller.name.toLowerCase().replace(/[^a-zA-Z\d:]/g,""),
+                "domain": seller.domain
+            });
+            ldm[liftl.indexOf(seller.name.toLowerCase().replace(/[^a-zA-Z\d:]/g,""))]  = seller.domain;
+            //console.log(`seller domain added! ${seller.domain}`)
+        }
     }
- }
+}
 
- let arr = [];  
- for (let d in sort_res) {
-    arr.push(sort_res[d]);
- }
 
-console.log(arr)
-console.log(arr.length)
+/*
+for (let i in applovin["sellers"]) {
+    let seller = applovin["sellers"][i];
+    if(seller.name && seller.domain && liftl.indexOf(seller.name) > -1 && ldm[liftl.indexOf(seller.name)] === "none") {
+        console.log(liftl.indexOf(seller.name));
+        ldm[liftl.indexOf(seller.name)]  = seller.domain;
+        console.log(`seller domain added! ${seller.domain}`)
+    }
+}
+*/
+
+// ^^WORKS
+// now just need to iterate across sellers.json files
+
+sellers =[];
+
+for(let t in liftl) { 
+    sellers.push({
+        "seller_id": lsid[t],
+        "seller_type": lst[t],
+        "domain": ldm[t],
+        "name":lifto[t]
+    })
+}
+
+//console.log(sellers);
+//console.log(d_counter);
+
+fs.writeFile('./results.json',JSON.stringify(sellers), err => {if (err) throw err; console.log('all done');})
+fs.writeFile('./new_additions.json',JSON.stringify(new_additions), err => {if (err) throw err; console.log('all done');})
